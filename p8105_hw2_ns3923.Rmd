@@ -14,7 +14,7 @@ Aims: Merging pols-month.csv, unemployment.csv, and snp.csv into a dataframe by 
 
 **Import data**
 ```{r import data, message=FALSE}
-polsmonth_df = read_csv(file = "./fivethirtyeight_datasets/pols-month.csv")
+pols_df = read_csv(file = "./fivethirtyeight_datasets/pols-month.csv")
 unemployment_df = read.csv(file = "./fivethirtyeight_datasets/unemployment.csv")
 snp_df = read.csv(file = "./fivethirtyeight_datasets/snp.csv")
 ```
@@ -29,7 +29,7 @@ snp_df = read.csv(file = "./fivethirtyeight_datasets/snp.csv")
 
 4. Remove `prez_dem` and `prez_gop`, and the day variable
 ```{r pols-month_dataset}
-polsmonth_df = polsmonth_df |>
+pols_df = pols_df |>
     janitor::clean_names() |>
     separate(mon, into = c("month","day","year"), convert = TRUE) |>
     mutate(
@@ -42,7 +42,7 @@ polsmonth_df = polsmonth_df |>
            starts_with("rep")) |>
     arrange(year, month)
 #Result
-polsmonth_df
+pols_df
 ```
 
 **Step 2**: Cleaning snp.csv 
