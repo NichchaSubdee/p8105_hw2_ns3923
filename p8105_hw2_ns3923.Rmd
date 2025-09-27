@@ -10,7 +10,7 @@ library(tidyverse)
 ```
 
 ## Problem 1
-Aims: Merging pols-month.csv, unemployment.csv, and snp.csv into a dataframe by using year/month as keys variable
+Aims: Merging *pols-month.csv*, *unemployment.csv*, and *snp.csv* into a dataframe by using year/month as keys variable
 
 **Import data**
 ```{r import data, message=FALSE}
@@ -19,7 +19,7 @@ unemployment_df = read.csv(file = "./fivethirtyeight_datasets/unemployment.csv")
 snp_df = read.csv(file = "./fivethirtyeight_datasets/snp.csv")
 ```
 
-**Step 1**: Cleaning pols-month.csv
+**Step 1**: Cleaning *pols-month.csv*
 
 1. Break up `mon` (e.g., 1/15/1947) into integer variables `year`,`month`, and `day`
 
@@ -33,8 +33,8 @@ pols_df = pols_df |>
     janitor::clean_names() |>
     separate(mon, into = c("month","day","year"), convert = TRUE) |>
     mutate(
-           president = ifelse(prez_gop == 1, "gop", "dem"),   
-           month = factor(month, levels = 1:12, labels = month.abb)    #Month name
+      president = ifelse(prez_gop == 1, "gop", "dem"),   
+      month = factor(month, levels = 1:12, labels = month.abb, ordered = TRUE)  
            ) |>
     select(year, month, president,
            starts_with("gov"),
@@ -45,7 +45,7 @@ pols_df = pols_df |>
 pols_df
 ```
 
-**Step 2**: Cleaning snp.csv 
+**Step 2**: Cleaning *snp.csv* 
 
 Using a similar process to pol-month.csv
 
@@ -63,7 +63,7 @@ snp_df = snp_df |>
 head(snp_df, 10)
 ```
 
-**Step 3**: Tidy unemployment.csv 
+**Step 3**: Tidy *unemployment.csv* 
 
 1. Switching from “wide” to “long” format
 
@@ -80,6 +80,20 @@ unemployment_df = unemployment_df |>
 
 # show first 10 rows
 head(unemployment_df, 10)
+```
+
+**Step 4**: Joining these 3 cleaned dataset
+
+- Merging `snp` into `pols` and merging `unemployment` into the result.
+
+```{r Final_df}
+Final_df = pols_df |>
+    left_join(snp_df,  by = c("year","month")) |>
+    left_join(unemployment_df, by = c("year","month")) |>
+    arrange(year, month)
+
+#Result
+Final_df
 ```
 
 
