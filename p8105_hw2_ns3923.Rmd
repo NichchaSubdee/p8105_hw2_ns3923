@@ -28,7 +28,7 @@ snp_df = read.csv(file = "./fivethirtyeight_datasets/snp.csv")
 3. Create `president`: taking values `gop` and `dem`
 
 4. Remove `prez_dem` and `prez_gop`, and the day variable
-```{r}
+```{r pols-month_dataset}
 polsmonth_df = polsmonth_df |>
     janitor::clean_names() |>
     separate(mon, into = c("month","day","year"), convert = TRUE) |>
@@ -49,7 +49,7 @@ polsmonth_df
 
 Using a similar process to pol-month.csv
 
-```{r}
+```{r snp_dataset}
 snp_df = snp_df |>
     janitor::clean_names() |>
     separate(date, into = c("month","day","year"), convert = TRUE) |>
@@ -61,6 +61,25 @@ snp_df = snp_df |>
 
 #Result
 head(snp_df, 10)
+```
+
+**Step 3**: Tidy unemployment.csv 
+
+1. Switching from “wide” to “long” format
+
+2. Ensuring that key variables have the same name and take the same values.
+
+```{r unemployment_dataset}
+unemployment_df = unemployment_df |>
+    janitor::clean_names() |>
+    pivot_longer(jan:dec, names_to = "month", values_to = "unemployment") |>
+    mutate(month = factor(stringr::str_to_title(month),
+           levels = month.abb, ordered = TRUE)) |>
+    select(year, month, unemployment) |>
+    arrange(year, month)
+
+# show first 10 rows
+head(unemployment_df, 10)
 ```
 
 
