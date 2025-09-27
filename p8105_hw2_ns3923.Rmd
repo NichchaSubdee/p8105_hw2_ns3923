@@ -1,5 +1,10 @@
 ---
 title: "p8105_hw2_ns3923"
+Name: Nichcha Subdee (ns3923)
 output: github_document
 ---
+
+```{r setup, message=FALSE}
+library(tidyverse)
+```
 
