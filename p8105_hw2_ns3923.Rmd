@@ -4,7 +4,26 @@ Name: Nichcha Subdee (ns3923)
 output: github_document
 ---
 
+**Setup necessary library**
 ```{r setup, message=FALSE}
 library(tidyverse)
 ```
+
+## Problem 1
+Aims: Merging pols-month.csv, unemployment.csv, and snp.csv into a dataframe by using year/month as keys variable
+
+**Import data**
+```{r import data, message=FALSE}
+polsmonth_df = read_csv(file = "./fivethirtyeight_datasets/pols-month.csv")
+unemployment_df = read.csv(file = "./fivethirtyeight_datasets/unemployment.csv")
+snp_df = read.csv(file = "./fivethirtyeight_datasets/snp.csv")
+```
+
+**Step 1**: Cleaning pols-month.csv
+```{r}
+
+```
+
+
+
 
