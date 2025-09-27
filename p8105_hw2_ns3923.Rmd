@@ -20,8 +20,29 @@ snp_df = read.csv(file = "./fivethirtyeight_datasets/snp.csv")
 ```
 
 **Step 1**: Cleaning pols-month.csv
-```{r}
 
+1. Break up `mon` (e.g., 1/15/1947) into integer variables `year`,`month`, and `day`
+
+2. Replace month number with month name
+
+3. Create `president`: taking values `gop` and `dem`
+
+4. Remove `prez_dem` and `prez_gop`, and the day variable
+```{r}
+polsmonth_df = polsmonth_df |>
+    janitor::clean_names() |>
+    separate(mon, into = c("year","month","day"), convert = TRUE) |>
+    mutate(
+           president = ifelse(prez_gop == 1, "gop", "dem"),   
+           month = factor(month, levels = 1:12, labels = month.abb)    #Month name
+           ) |>
+    select(year, month, president,
+           starts_with("gov"),
+           starts_with("sen"),
+           starts_with("rep")) |>
+    arrange(year, month)
+#Result
+polsmonth_df
 ```
 
 
