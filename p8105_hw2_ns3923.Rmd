@@ -31,7 +31,7 @@ snp_df = read.csv(file = "./fivethirtyeight_datasets/snp.csv")
 ```{r}
 polsmonth_df = polsmonth_df |>
     janitor::clean_names() |>
-    separate(mon, into = c("year","month","day"), convert = TRUE) |>
+    separate(mon, into = c("month","day","year"), convert = TRUE) |>
     mutate(
            president = ifelse(prez_gop == 1, "gop", "dem"),   
            month = factor(month, levels = 1:12, labels = month.abb)    #Month name
@@ -45,6 +45,23 @@ polsmonth_df = polsmonth_df |>
 polsmonth_df
 ```
 
+**Step 2**: Cleaning snp.csv 
+
+Using a similar process to pol-month.csv
+
+```{r}
+snp_df = snp_df |>
+    janitor::clean_names() |>
+    separate(date, into = c("month","day","year"), convert = TRUE) |>
+    mutate(
+        month = factor(month, levels = 1:12, labels = month.abb, ordered = TRUE)
+      ) |>
+    select(year, month, close) |>
+    arrange(year, month)
+
+#Result
+head(snp_df, 10)
+```
 
 
 
