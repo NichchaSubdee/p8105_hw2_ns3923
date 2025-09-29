@@ -197,7 +197,7 @@ zori_df = read.csv(file = "./zillow_data/Zip_zori_uc_sfrcondomfr_sm_month_NYC.cs
 ```
 
 **Step 1: Clean ZIP crosswalk**
-```{r}
+```{r zip_df}
 zip_df = zip_df |> 
     janitor::clean_names() |> 
     rename(zip = zip_code) |> 
@@ -207,7 +207,8 @@ zip_df = zip_df |>
         county == "New York" ~ "Manhattan",
         county == "Kings" ~ "Brooklyn",
         county == "Queens" ~ "Queens",
-        county =="Richmond" ~ "Staten Island",
+        county == "Bronx" ~ "Bronx",
+        county == "Richmond" ~ "Staten Island",
         TRUE ~ county
         )) |> 
   distinct(zip, borough, county, neighborhood) |> 
@@ -221,7 +222,7 @@ head(zip_df, 10)
 
 Wide to long format
 
-```{r}
+```{r zori_df}
 zori_df = zori_df |>
     janitor::clean_names() |>
     rename(zip = region_name) |>
@@ -245,4 +246,77 @@ zori_df = zori_df |>
 head(zori_df, 10)
 ```
 
-**
+**Step 3: Merge tidy ZORI with the ZIP crosswalk**
+```{r merge_P3}
+zip_unique = zip_df |> 
+    group_by(zip) |> 
+    slice(1) |> 
+    ungroup()
+
+nyc_rent = zori_df |> 
+    left_join(zip_unique, by = "zip") |> 
+    relocate(zip, borough, county, neighborhood, date, zori) |> 
+  arrange(zip, date)
+
+#Result
+nyc_rent
+```
+
+```{r P3_summary, message=FALSE}
+#Observations, unique ZIP, unique neighborhood
+n_obs = nrow(nyc_rent)
+n_zip = n_distinct(nyc_rent$zip)
+n_neighborhood = nyc_rent |> 
+    filter(!is.na(neighborhood)) |>
+    pull(neighborhood) |> 
+    n_distinct()
+
+#Zip code in ZIP dataset, not in Zillow dataset
+zips_not_zori = anti_join(
+    zip_unique,
+    distinct(zori_df, zip), by = "zip"
+    ) |> 
+    arrange(zip)
+```
+
+
+# **Description**:
+
+**How many total observations exist?**
+
+The final dataset, `nyc_rent`, has `r format(n_obs, big.mark = ",")` observations
+
+**How many unique ZIP codes are included, and how many unique neighborhoods?**: There are `r n_zip` unique ZIP codes and `r n_neighborhood` neighborhoods.
+
+**Which ZIP codes appear in the ZIP code dataset but not in the Zillow Rental Price dataset? Why?**: 
+
+There are `r nrow(zips_not_zori)` ZIP codes that appear in the crosswalk but not in the Zillow Rental Price dataset. These are often specific purpose or non-residential ZIPs (e.g., PO boxes or commercial-only areas), or places with too little rental activity for Zillow to publish a series. A few examples are shown below: 
+```{r zip_notZillow}
+zips_not_zori |> 
+    select(zip, borough, neighborhood) |> 
+    slice_head(n = 10) |> 
+knitr::kable(caption = "**Table 1:** ZIP codes present in the crosswalk but missing in ZORI")
+```
+
+
+**Rental prices fluctuated dramatically during the COVID-19 pandemic. For all available ZIP codes, compare rental prices in January 2021 to prices in January 2020. Make a table that shows the 10 ZIP codes (along with the borough and neighborhood) with largest drop in price from January 2020 to 2021.**
+
+The Table below lists the 10 ZIP codes with the largest drops in ZORI from January 2020 to January 2021
+```{r covid_P3}
+#COVID
+covid_drop =
+    nyc_rent |>
+    filter(date %in% as.Date(c("2020-01-31", "2021-01-31"))) |>
+    mutate(year = lubridate::year(date)) |>
+    select(zip, borough, neighborhood, year, zori) |>
+    pivot_wider(names_from = year, values_from = zori, names_prefix = "y")     |>
+    mutate(drop_2020_2021 = y2021 - y2020) |>
+    arrange(drop_2020_2021) |>
+    slice_head(n = 10)
+
+#Result
+knitr::kable(covid_drop, digits = 0, caption = "**Table 2:** Largest drops in ZORI from January 2020 to January 2021")
+```
+
+From Table 2, the biggest declines are concentrated in Manhattan ZIP codes, which fits the early-pandemic pattern of renters leaving dense, high-cost areas. Negative values indicate that rents fell year-over-year.
+
