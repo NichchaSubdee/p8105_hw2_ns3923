@@ -203,12 +203,12 @@ zip_df = zip_df |>
     rename (zip = zip_code) |> 
     mutate(
       zip = stringr::str_pad(as.character(zip), 5, pad = "0"),
-      borough = case_match(
-        county,
-        "New York" ~ "Manhattan",
-        "Kings" ~ "Brooklyn",
-        "Queens" ~ "Queens",
-        "Richmond" ~ "Staten Island",
+      borough = case_when(
+        county == "New York" ~ "Manhattan",
+        county == "Kings" ~ "Brooklyn",
+        county == "Queens" ~ "Queens",
+        county =="Richmond" ~ "Staten Island",
+        TRUE ~ county
         )) |> 
   distinct(zip, county, neighborhood) |> 
   arrange(zip)
