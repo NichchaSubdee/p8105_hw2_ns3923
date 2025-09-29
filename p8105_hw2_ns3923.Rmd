@@ -200,7 +200,7 @@ zori_df = read.csv(file = "./zillow_data/Zip_zori_uc_sfrcondomfr_sm_month_NYC.cs
 ```{r}
 zip_df = zip_df |> 
     janitor::clean_names() |> 
-    rename (zip = zip_code) |> 
+    rename(zip = zip_code) |> 
     mutate(
       zip = stringr::str_pad(as.character(zip), 5, pad = "0"),
       borough = case_when(
@@ -210,10 +210,39 @@ zip_df = zip_df |>
         county =="Richmond" ~ "Staten Island",
         TRUE ~ county
         )) |> 
-  distinct(zip, county, neighborhood) |> 
+  distinct(zip, borough, county, neighborhood) |> 
   arrange(zip)
 
 #Result
 head(zip_df, 10)
 ```
 
+**Step 2: Tidy the zillow_zori file**
+
+Wide to long format
+
+```{r}
+zori_df = zori_df |>
+    janitor::clean_names() |>
+    rename(zip = region_name) |>
+    mutate(zip = str_pad(as.character(zip), 5, pad = "0")) |>
+
+    pivot_longer(
+      cols = matches("^x\\d{4}(_\\d{2}){2}$"),
+      names_to  = "date_str",
+      values_to = "zori"
+      ) |>
+    mutate(
+      date = ymd(
+      str_replace_all(str_remove(date_str, "^x"), "_", "-")
+      )
+  ) |>
+  
+  select(zip, date, zori) |>
+  arrange(zip, date)
+
+#Result
+head(zori_df, 10)
+```
+
+**
