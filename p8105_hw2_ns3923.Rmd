@@ -188,3 +188,32 @@ From the available data, Professor Trash Wheel collected `r sum(ProfTrash_df$wei
 
 ## Problem 3
 
+Aims: To combine an organized dataset of *zillow_data*
+
+**Import data**
+```{r import data_P3, message=FALSE}
+zip_df = read_csv(file = "./zillow_data/Zip Codes.csv")
+zori_df = read.csv(file = "./zillow_data/Zip_zori_uc_sfrcondomfr_sm_month_NYC.csv")
+```
+
+**Step 1: Clean ZIP crosswalk**
+```{r}
+zip_df = zip_df |> 
+    janitor::clean_names() |> 
+    rename (zip = zip_code) |> 
+    mutate(
+      zip = stringr::str_pad(as.character(zip), 5, pad = "0"),
+      borough = case_match(
+        county,
+        "New York" ~ "Manhattan",
+        "Kings" ~ "Brooklyn",
+        "Queens" ~ "Queens",
+        "Richmond" ~ "Staten Island",
+        )) |> 
+  distinct(zip, county, neighborhood) |> 
+  arrange(zip)
+
+#Result
+head(zip_df, 10)
+```
+
