@@ -135,6 +135,34 @@ MrTrash_df = MrTrash_df |>
 MrTrash_df
 ```
 
+**Professor Trash Wheel Cleaning**
+```{r}
+ProfTrash_df = ProfTrash_df |> 
+    janitor::clean_names() |> 
+    janitor::remove_empty("cols") |> 
+    filter(!is.na(dumpster)) |> 
+    mutate(
+      wheel = "Professor Trash Wheel"
+    )
+
+#Result
+ProfTrash_df
+```
+
+**Gwynnda Trash Wheel Cleaning**
+```{r}
+Gwyn_df = Gwyn_df |> 
+    janitor::clean_names() |> 
+    janitor::remove_empty("cols") |> 
+    filter(!is.na(dumpster)) |> 
+    mutate(
+      wheel = "Gwynnda Trash Wheel"
+    )
+
+#Result
+Gwyn_df
+```
+
 
 
 
