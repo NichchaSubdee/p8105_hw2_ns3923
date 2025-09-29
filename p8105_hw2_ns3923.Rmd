@@ -102,7 +102,7 @@ The cleaned *pols_df* dataset [822 rows x 9 variables] contains counts of govern
 
 ## Problem 2
 
-Aims: 
+The *Mr. Trash Wheel* dataset consists of 6 sheets, and the sheets that will be used in this problem are *Mr. Trash Wheel*,*Professor Trash Wheel*, and *Gwynnda Trash Wheel*.
 
 **Setup necessary library**
 ```{r setup_P2, message=FALSE}
@@ -113,5 +113,7 @@ Before I import the excel file, I change its name in the local folder to *TrashW
 
 **Import data**
 ```{r import data_P2, message=FALSE}
-Trashwheel_df = read_excel("./TrashWheel_data.xlsx", n_max = 20)
+MrTrash_df = read_excel("./TrashWheel_data.xlsx", sheet = "Mr. Trash Wheel", skip = 1)
+ProfTrash_df = read_excel("./TrashWheel_data.xlsx", sheet = "Professor Trash Wheel", skip = 1)
+Gwyn_df = read_excel("./TrashWheel_data.xlsx", sheet = "Gwynnda Trash Wheel", skip = 1)
 ```
