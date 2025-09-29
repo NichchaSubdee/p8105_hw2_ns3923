@@ -117,3 +117,25 @@ MrTrash_df = read_excel("./TrashWheel_data.xlsx", sheet = "Mr. Trash Wheel", ski
 ProfTrash_df = read_excel("./TrashWheel_data.xlsx", sheet = "Professor Trash Wheel", skip = 1)
 Gwyn_df = read_excel("./TrashWheel_data.xlsx", sheet = "Gwynnda Trash Wheel", skip = 1)
 ```
+
+**Mr. Trash Wheel cleaning**
+
+```{r MrTrash_dataset}
+MrTrash_df = MrTrash_df |>
+    janitor::clean_names() |>
+    janitor::remove_empty("cols") |> 
+    select(-starts_with("...")) |>
+    filter(!is.na(dumpster)) |> 
+    mutate(
+      sports_balls = as.integer(round(sports_balls)),
+      wheel = "Mr. Trash Wheel"
+    )
+
+#Result
+MrTrash_df
+```
+
+
+
+
+
