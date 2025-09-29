@@ -128,7 +128,8 @@ MrTrash_df = MrTrash_df |>
     filter(!is.na(dumpster)) |> 
     mutate(
       sports_balls = as.integer(round(sports_balls)),
-      wheel = "Mr. Trash Wheel"
+      wheel = "Mr. Trash Wheel",
+      year = as.integer(year)
     )
 
 #Result
@@ -136,13 +137,14 @@ MrTrash_df
 ```
 
 **Professor Trash Wheel Cleaning**
-```{r}
+```{r ProfTrash_dataset}
 ProfTrash_df = ProfTrash_df |> 
     janitor::clean_names() |> 
     janitor::remove_empty("cols") |> 
     filter(!is.na(dumpster)) |> 
     mutate(
-      wheel = "Professor Trash Wheel"
+      wheel = "Professor Trash Wheel",
+      year = as.integer(year)
     )
 
 #Result
@@ -150,20 +152,38 @@ ProfTrash_df
 ```
 
 **Gwynnda Trash Wheel Cleaning**
-```{r}
+```{r GwynndaTrash_dataset}
 Gwyn_df = Gwyn_df |> 
     janitor::clean_names() |> 
     janitor::remove_empty("cols") |> 
     filter(!is.na(dumpster)) |> 
     mutate(
-      wheel = "Gwynnda Trash Wheel"
+      wheel = "Gwynnda Trash Wheel",
+      year = as.integer(year)
     )
 
 #Result
 Gwyn_df
 ```
 
+**Combine all three sheets**
+```{r}
+FinalTrash_df =
+    bind_rows(MrTrash_df, ProfTrash_df, Gwyn_df) |> 
+    mutate(
+      year = as.integer(year),
+      month = factor(month, levels = month.name, ordered = TRUE)
+    ) |> 
+    relocate(wheel, dumpster, date, year, month)
 
+#Result
+FinalTrash_df
+```
+
+**Description**:
+I imported the *Mr. Trash Wheel*, *Professor Trash Wheel*, and *Gwynnda Trash Wheel* sheets, cleaned names, removed unncessary columns and rows with missing `dumpster`. In order to combine these three sheets, I create a new variable called `wheel` and combine them by this key variable. The final dataset, *FinalTrash_df*, has `r nrow(FinalTrash_df)` rows and `r ncol(FinalTrash_df)` variables. Some of key variables describes the volumn of trash `dumpster`, `weight_tons`, and types of trash like `sports_balls`, `plastic_bottles`, and `cigarette_butts`.
+
+From the available data, Professor Trash Wheel collected `r sum(ProfTrash_df$weight_tons, na.rm = TRUE)` tons in total, and Gwynnada collected `r as.integer(sum(Gwyn_df$cigarette_butts[Gwyn_df$year == 2022 & Gwyn_df$month == "June"], na.rm = TRUE))` cigarette butts in June 2022. 
 
 
 
