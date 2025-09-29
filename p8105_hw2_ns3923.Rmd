@@ -181,9 +181,10 @@ FinalTrash_df
 ```
 
 **Description**:
-I imported the *Mr. Trash Wheel*, *Professor Trash Wheel*, and *Gwynnda Trash Wheel* sheets, cleaned names, removed unncessary columns and rows with missing `dumpster`. In order to combine these three sheets, I create a new variable called `wheel` and combine them by this key variable. The final dataset, *FinalTrash_df*, has `r nrow(FinalTrash_df)` rows and `r ncol(FinalTrash_df)` variables. Some of key variables describes the volumn of trash `dumpster`, `weight_tons`, and types of trash like `sports_balls`, `plastic_bottles`, and `cigarette_butts`.
+I imported the *Mr. Trash Wheel*, *Professor Trash Wheel*, and *Gwynnda Trash Wheel* sheets, cleaned names, and removed unnecessary columns and rows with missing `dumpster`. Then, I created a new variable called `wheel` and stacked the three datasets. The final dataset, *FinalTrash_df*, has `r nrow(FinalTrash_df)` observations and `r ncol(FinalTrash_df)` variables. Some key variables include `dumpster`, `weight_tons`, and types of trash like `sports_balls`, `plastic_bottles`, and `cigarette_butts`.
 
-From the available data, Professor Trash Wheel collected `r sum(ProfTrash_df$weight_tons, na.rm = TRUE)` tons in total, and Gwynnada collected `r as.integer(sum(Gwyn_df$cigarette_butts[Gwyn_df$year == 2022 & Gwyn_df$month == "June"], na.rm = TRUE))` cigarette butts in June 2022. 
+From the available data, Professor Trash Wheel collected `r sum(ProfTrash_df$weight_tons, na.rm = TRUE)` tons in total, and Gwynnda collected `r format(as.integer(sum(Gwyn_df$cigarette_butts[Gwyn_df$year == 2022 & Gwyn_df$month == "June"], na.rm = TRUE)), big.mark = ",")` cigarette butts in June 2022. 
 
 
+## Problem 3
 
