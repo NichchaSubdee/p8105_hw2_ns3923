@@ -234,8 +234,8 @@ zori_df = zori_df |>
       values_to = "zori"
       ) |>
     mutate(
-      date = ymd(
-      str_replace_all(str_remove(date_str, "^x"), "_", "-")
+      date = lubridate::ymd(
+      stringr::str_replace_all(stringr::str_remove(date_str, "^x"), "_", "-")
       )
   ) |>
   
@@ -284,13 +284,15 @@ zips_not_zori = anti_join(
 
 **How many total observations exist?**
 
-The final dataset, `nyc_rent`, has `r format(n_obs, big.mark = ",")` observations
+The final dataset, `nyc_rent`, has `r format(n_obs, big.mark = ",")` observations.
 
-**How many unique ZIP codes are included, and how many unique neighborhoods?**: There are `r n_zip` unique ZIP codes and `r n_neighborhood` neighborhoods.
+**How many unique ZIP codes are included, and how many unique neighborhoods?**
+
+There are `r n_zip` unique ZIP codes and `r n_neighborhood` neighborhoods.
 
 **Which ZIP codes appear in the ZIP code dataset but not in the Zillow Rental Price dataset? Why?**: 
 
-There are `r nrow(zips_not_zori)` ZIP codes that appear in the crosswalk but not in the Zillow Rental Price dataset. These are often specific purpose or non-residential ZIPs (e.g., PO boxes or commercial-only areas), or places with too little rental activity for Zillow to publish a series. A few examples are shown below: 
+There are `r nrow(zips_not_zori)` ZIP codes that appear in the crosswalk but not in the Zillow Rental Price dataset. These are often specific purpose or non-residential ZIPs (e.g., PO boxes or commercial-only areas or low-activity ZIPs), or places with too little rental activity for Zillow to publish a series. A few examples are shown below: 
 ```{r zip_notZillow}
 zips_not_zori |> 
     select(zip, borough, neighborhood) |> 
