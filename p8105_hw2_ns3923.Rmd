@@ -158,7 +158,7 @@ Gwyn_df = Gwyn_df |>
     janitor::remove_empty("cols") |> 
     filter(!is.na(dumpster)) |> 
     mutate(
-      wheel = "Gwynnda Trash Wheel",
+      wheel = "Gwynns Falls Trash Wheel",
       year = as.integer(year)
     )
 
