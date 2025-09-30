@@ -96,26 +96,26 @@ Final_df = pols_df |>
 Final_df
 ```
 
-**Description**: 
+### **Description**: 
 The cleaned *pols_df* dataset [822 rows x 9 variables] contains counts of governors (`gov_dem` or `gov_gop`), senators (`sen_dem` or `sen_gop`), and representatives (`rep_dem` or `rep_gop`) by party(i.e., Democratic and Republican) and the party of the sitting president (`president`). Also, the cleaned *snp_df* dataset [787 rows x 3 variables] contains the S&P monthly closing value (`close`). Lastly, *unemployment_df* [816 rows x 3 variables] has the monthly unemployment rate (`unemployment`). After combining these three datasets by using `month` and `year` as key variables, the *Final_df* has `r nrow(Final_df)` rows and `r ncol(Final_df)` variables, starting from January 1947 to June 2015.
 
 
 ## Problem 2
 
-The *Mr. Trash Wheel* dataset consists of 6 sheets, and the sheets that will be used in this problem are *Mr. Trash Wheel*,*Professor Trash Wheel*, and *Gwynnda Trash Wheel*.
+The *Mr. Trash Wheel* dataset consists of 6 sheets, and the sheets that will be used in this problem are *Mr. Trash Wheel*,*Professor Trash Wheel*, and *Gwynns Falls Trash Wheel*.
 
 **Setup necessary library**
 ```{r setup_P2, message=FALSE}
 library(readxl)
 ```
 
-Before I import the excel file, I change its name in the local folder to *TrashWheel_data*
+Before I import the excel file, I change its name in the local folder to *Update_Trashwheel.xlsx*
 
 **Import data**
 ```{r import data_P2, message=FALSE}
-MrTrash_df = read_excel("./TrashWheel_data.xlsx", sheet = "Mr. Trash Wheel", skip = 1)
-ProfTrash_df = read_excel("./TrashWheel_data.xlsx", sheet = "Professor Trash Wheel", skip = 1)
-Gwyn_df = read_excel("./TrashWheel_data.xlsx", sheet = "Gwynnda Trash Wheel", skip = 1)
+MrTrash_df = read_excel("./Update_Trashwheel.xlsx", sheet = "Mr. Trash Wheel", skip = 1)
+ProfTrash_df = read_excel("./Update_Trashwheel.xlsx", sheet = "Professor Trash Wheel", skip = 1)
+Gwyn_df = read_excel("./Update_Trashwheel.xlsx", sheet = "Gwynns Falls Trash Wheel", skip = 1)
 ```
 
 **Mr. Trash Wheel cleaning**
@@ -151,8 +151,8 @@ ProfTrash_df = ProfTrash_df |>
 ProfTrash_df
 ```
 
-**Gwynnda Trash Wheel Cleaning**
-```{r GwynndaTrash_dataset}
+**Gwynns Falls Trash Wheel Cleaning**
+```{r GwynnsTrash_dataset}
 Gwyn_df = Gwyn_df |> 
     janitor::clean_names() |> 
     janitor::remove_empty("cols") |> 
@@ -180,10 +180,10 @@ FinalTrash_df =
 FinalTrash_df
 ```
 
-**Description**:
-I imported the *Mr. Trash Wheel*, *Professor Trash Wheel*, and *Gwynnda Trash Wheel* sheets, cleaned names, and removed unnecessary columns and rows with missing `dumpster`. Then, I created a new variable called `wheel` and stacked the three datasets. The final dataset, *FinalTrash_df*, has `r nrow(FinalTrash_df)` observations and `r ncol(FinalTrash_df)` variables. Some key variables include `dumpster`, `weight_tons`, and types of trash like `sports_balls`, `plastic_bottles`, and `cigarette_butts`.
+### **Description**:
+I imported the *Mr. Trash Wheel*, *Professor Trash Wheel*, and *Gwynns Falls Trash Wheel* sheets, cleaned names, and removed unnecessary columns and rows with missing `dumpster`. Then, I created a new variable called `wheel` and stacked the three datasets. The final dataset, *FinalTrash_df*, has `r nrow(FinalTrash_df)` observations and `r ncol(FinalTrash_df)` variables. Some key variables include `dumpster`, `weight_tons`, and types of trash like `sports_balls`, `plastic_bottles`, and `cigarette_butts`.
 
-From the available data, Professor Trash Wheel collected `r sum(ProfTrash_df$weight_tons, na.rm = TRUE)` tons in total, and Gwynnda collected `r format(as.integer(sum(Gwyn_df$cigarette_butts[Gwyn_df$year == 2022 & Gwyn_df$month == "June"], na.rm = TRUE)), big.mark = ",")` cigarette butts in June 2022. 
+From the available data, Professor Trash Wheel collected `r sum(ProfTrash_df$weight_tons, na.rm = TRUE)` tons in total, and Gwynns Falls Trash Wheel collected `r format(as.integer(sum(Gwyn_df$cigarette_butts[Gwyn_df$year == 2022 & Gwyn_df$month == "June"], na.rm = TRUE)), big.mark = ",")` cigarette butts in June 2022. 
 
 
 ## Problem 3
@@ -280,7 +280,7 @@ zips_not_zori = anti_join(
 ```
 
 
-# **Description**:
+### **Description**:
 
 **How many total observations exist?**
 
@@ -297,7 +297,7 @@ There are `r nrow(zips_not_zori)` ZIP codes that appear in the crosswalk but not
 zips_not_zori |> 
     select(zip, borough, neighborhood) |> 
     slice_head(n = 10) |> 
-knitr::kable(caption = "**Table 1:** ZIP codes present in the crosswalk but missing in ZORI")
+knitr::kable(caption = "**Table 1:** Examples of ZIP codes present in the crosswalk but missing in ZORI")
 ```
 
 
